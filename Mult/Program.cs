@@ -32,18 +32,24 @@ namespace Mult
                 x2 = Math.Abs(x2);
             }
 
-            int res = 0;
-            while (0 != x2)
-            {
-                if (0 != (x2 & 1))
-                {
-                    res += x1;
-                }
-                x1 = x1 << 1;
-                x2 = x2 >> 1;
-            }
+            int res = MultiplyReс(x1, x2);
 
             return (positiveRes ? res : -res);
+        }
+
+        private static int MultiplyReс(int x1, int x2)
+        {
+            if (0 == x2)
+            {
+                return 0;
+            }
+
+            int res = 0;
+            if (0 != (x2 & 1))
+            {
+                res = x1;
+            }
+            return res + MultiplyReс(x1 << 1, x2 >> 1);
         }
 
         private static int MultTest(int x1, int x2)
