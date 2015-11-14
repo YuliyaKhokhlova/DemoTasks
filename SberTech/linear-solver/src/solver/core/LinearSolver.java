@@ -1,3 +1,4 @@
+package solver.core;
 // Solver for Linear Algebraic Equations System
 // Ax=b
 // A - matrix (n x n)
@@ -11,7 +12,7 @@ public class LinearSolver {
 		}
 	}
 	
-	private static final double Epsilon = 0.0001;
+	public static final double Epsilon = 0.0001;
 	public static double[] Gauss(double[][] extendedMatrix) throws NoUniqueSolutionException {
 		int VariablesNumber = extendedMatrix.length;
 		
