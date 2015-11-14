@@ -5,26 +5,26 @@ public class SolverTest {
 
 	@Test
 	public void test1() {
-		
-		assertTrue(RunSolverOnInput("input.txt"));
+		double[] expectedSolution = {2.25, -0.875};
+		assertTrue(RunSolverOnInput("input.txt", expectedSolution));
 	}
 	
 	@Test
 	public void test2() {
-		assertTrue(RunSolverOnInput("input1.txt"));
+		double[] expectedSolution = {2.25, -0.875};
+		assertTrue(RunSolverOnInput("input1.txt", expectedSolution));
 	}
 
-	public boolean RunSolverOnInput(String inputFileName) {
-		LinearSolver solver = null;
+	public boolean RunSolverOnInput(String inputFileName, double[] expectedSolution) {
 		try {
-			solver = new LinearSolver(inputFileName);
-			solver.Gauss();
+			double[][] extMx = MatrixReader.loadMatrix(inputFileName);
+			double[] solution = LinearSolver.Gauss(extMx);
+	 		return CompareVectors(solution, expectedSolution);
 		}
 		catch (Exception e) {
-			
+			System.out.println("Error: " + e.getMessage());
 		}
-		double[] expectedSolution = {2.25, -0.875};
- 		return CompareVectors(solver.getSolution(), expectedSolution);
+		return false;
 	}
 	
 	public boolean CompareVectors(double[] vec1, double[] vec2){

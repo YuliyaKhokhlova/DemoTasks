@@ -8,13 +8,30 @@ public class Program {
 		
 		String inputFileName = args[0];
 		try {
-			LinearSolver solver = new LinearSolver(inputFileName);
-			solver.PrintSystem();
-			solver.Gauss();
-			solver.PrintAnswer();
+			double[][] extMx = MatrixReader.loadMatrix(inputFileName);
+			printSystem(extMx);
+			
+			double[] solution = LinearSolver.Gauss(extMx);
+			printVector(solution);
 		}
 		catch (Exception e) {
 			System.out.println("Error: " + e.getMessage());
+		}
+	}
+
+	public static void printVector(double[] vector) {
+		for (int i = 0; i < vector.length; i++) {
+			System.out.print("x" + (i+1) + "=" + vector[i] + " ");
+		}
+		System.out.println("");		
+	}
+
+	public static void printSystem(double[][] extendedMatrix) {
+		for(int i = 0; i < extendedMatrix.length; i++) {
+			for (int j = 0; j < extendedMatrix[0].length; j++) {
+				System.out.print((extendedMatrix[i][j] >= 0 ? "+" : "") + extendedMatrix[i][j] + "x" + (j+1) + " ");
+			}
+			System.out.println("= " + extendedMatrix[i][extendedMatrix.length]);
 		}
 	}
 
