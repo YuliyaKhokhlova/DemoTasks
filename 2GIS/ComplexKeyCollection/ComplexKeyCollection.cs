@@ -2,14 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ComplexKeyCollection
 {
     class ComplexKey<TId, TName>
-        where TId : IEqualityComparer<TId>
-        where TName : IEqualityComparer<TName>
     {
         public TId Id { get; }
         public TName Name { get; }
@@ -20,14 +16,15 @@ namespace ComplexKeyCollection
             Name = nameValue;
         }
 
-        public bool Equals(ComplexKey<TId, TName> obj)
-        {
-            return Id.Equals(obj.Id) && Name.Equals(obj.Name);
-        }
-
         public override bool Equals(Object obj)
         {
-            return base.Equals(obj);
+            if (!(obj is ComplexKey<TId, TName>))
+            {
+                return base.Equals(obj);
+            }
+
+            ComplexKey<TId, TName> key = obj as ComplexKey<TId, TName>;
+            return key.Id.Equals(Id) && key.Name.Equals(Name);
         }
 
         public override int GetHashCode()
@@ -37,8 +34,6 @@ namespace ComplexKeyCollection
     }
 
     class ComplexKeyCollection<TId, TName, TValue> : IDictionary<ComplexKey<TId, TName>, TValue> 
-        where TId : IEqualityComparer<TId>
-        where TName : IEqualityComparer<TName>
     {
         private Dictionary<ComplexKey<TId, TName>, TValue> collection;
 
@@ -54,12 +49,13 @@ namespace ComplexKeyCollection
 
         public void Add(ComplexKey<TId, TName> key, TValue value)
         {
-            ((IDictionary<ComplexKey<TId, TName>, TValue>)collection).Add(key, value);
+            collection.Add(key, value);
         }
 
         public void Add(TId id, TName name, TValue value)
         {
-            collection.Add(new ComplexKey<TId, TName>(id, name), value);
+            ComplexKey<TId, TName> key = new ComplexKey<TId, TName>(id, name);
+            collection.Add(key, value);
         }
 
         public bool Remove(ComplexKey<TId, TName> key)

@@ -23,7 +23,7 @@ namespace ComplexKeyCollection
         }
     }
 
-    class Identifier : IEqualityComparer<Identifier>
+    class Identifier
     {
         public int MajorId { get; }
         public int MinorId { get; }
@@ -39,19 +39,13 @@ namespace ComplexKeyCollection
             return MajorId.ToString() + "|" + MinorId.ToString();
         }
 
-        public bool Equals(Identifier obj)
-        {
-            return MajorId == obj.MajorId && MinorId == obj.MinorId;
-        }
-
         public override bool Equals(object obj)
         {
-            return base.Equals(obj);
-        }
-
-        public bool Equals(Identifier x, Identifier y)
-        {
-            return x.MajorId == y.MajorId && x.MinorId == y.MinorId;
+            if (!(obj is Identifier))
+            {
+                return base.Equals(obj);
+            }
+            return MajorId == (obj as Identifier).MajorId && MinorId == (obj as Identifier).MinorId;
         }
 
         int multiplier = 197;
@@ -60,17 +54,12 @@ namespace ComplexKeyCollection
             return multiplier * MajorId + MinorId;
         }
 
-        public int GetHashCode(Identifier obj)
-        {
-            return multiplier * obj.MajorId + obj.MinorId;
-        }
     }
 
     class Program
     {
         static void Main(string[] args)
         {
-            
             ComplexKeyCollection<int, string, string> col = new ComplexKeyCollection<int, string, string>();
             col[5, "hello"] = "Kitty";
             col.Add(5, "go", "Molly");
@@ -84,20 +73,9 @@ namespace ComplexKeyCollection
             smth[new Identifier(5, 4), "milk"] = new NumberStr(15, "bottle");
             ShowUsage<Identifier, string, NumberStr>(smth);
             
-            Identifier a = new Identifier(5, 4);
-            Identifier b = new Identifier(5, 4);
-            if ("abc".GetHashCode().Equals("abc".GetHashCode()))
-            {
-                Console.WriteLine("abc".GetHashCode());
-                Console.WriteLine("Equal");
-            }
-            else
-                Console.WriteLine("Not Equal");
         }
 
         private static void ShowUsage<TId, TName, TValue>(ComplexKeyCollection<TId, TName, TValue> collection)
-            where TId : IEqualityComparer<TId>
-            where TName : IEqualityComparer<TName>
         {
             Console.WriteLine("-------------------------");
             Console.WriteLine("Number of elements: " + collection.Count);
