@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ComplexKeyCollection
 {
@@ -38,7 +35,7 @@ namespace ComplexKeyCollection
         {
             return MajorId.ToString() + "|" + MinorId.ToString();
         }
-
+        
         public override bool Equals(object obj)
         {
             if (!(obj is Identifier))
@@ -53,7 +50,7 @@ namespace ComplexKeyCollection
         {
             return multiplier * MajorId + MinorId;
         }
-
+        
     }
 
     class Program
@@ -64,15 +61,31 @@ namespace ComplexKeyCollection
             col[5, "hello"] = "Kitty";
             col.Add(5, "go", "Molly");
             col.Add(4, "hello", "Dolly");
+            col[4, "go"] = "Polly";
+            col[5, "hello"] = "Kolly";
             ShowUsage<int, string, string>(col);
 
             ComplexKeyCollection<Identifier, string, NumberStr> smth = new ComplexKeyCollection<Identifier, string, NumberStr>();
             smth[new Identifier(5, 4), "milk"] = new NumberStr(15, "bowl");
-            smth.Add(new Identifier(3, 7), "juice", new NumberStr(2, "cup"));
+            smth.Add(new Identifier(3, 7), "juice", new NumberStr(8, "cup"));
+            smth.Add(new Identifier(2, 1), "milk", new NumberStr(6, "barrel"));
             smth.Add(new Identifier(3, 7), "water", new NumberStr(2, "glass"));
-            smth[new Identifier(5, 4), "milk"] = new NumberStr(15, "bottle");
+            smth[new Identifier(5, 4), "milk"] = new NumberStr(11, "bottle");
             ShowUsage<Identifier, string, NumberStr>(smth);
-            
+
+            Identifier id37 = new Identifier(3, 7);
+            Console.WriteLine("Values for ID " + id37 + ":");
+            foreach (NumberStr value in smth.ValuesWithId(id37))
+            {
+                Console.WriteLine("\t" + value);
+            }
+
+            string nameMilk = "milk";
+            Console.WriteLine("Values for Name " + nameMilk + ":");
+            foreach (NumberStr value in smth.ValuesWithName(nameMilk))
+            {
+                Console.WriteLine("\t" + value);
+            }
         }
 
         private static void ShowUsage<TId, TName, TValue>(ComplexKeyCollection<TId, TName, TValue> collection)
